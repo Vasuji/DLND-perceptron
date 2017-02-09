@@ -185,7 +185,7 @@ rides[:24*10].plot(x='dteday', y='cnt')
 
 
 
-![png](https://github.com/Vasuji/perceptron/blob/master/pic1/output_6_1.png?raw=true =250x250)
+![png](https://github.com/Vasuji/perceptron/blob/master/pic1/output_6_1.png?raw=true =150x150)
 
 
 ### Dummy variables
