@@ -185,7 +185,7 @@ rides[:24*10].plot(x='dteday', y='cnt')
 
 
 
-![png](output_6_1.png)
+![png](pic1\output_6_1.png)
 
 
 ### Dummy variables
@@ -752,7 +752,7 @@ plt.show()
 ```
 
 
-![png](output_27_0.png)
+![png](pic1/output_27_0.png)
 
 
 ## Check out your predictions
@@ -777,7 +777,7 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 ```
 
 
-![png](output_29_0.png)
+![png](pic1/output_29_0.png)
 
 
 ## Thinking about your results
