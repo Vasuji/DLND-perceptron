@@ -568,9 +568,6 @@ class NeuralNetwork(object):
 
 ### My Network Checker
 
-![a](perceptron.jpg)
-Image source: Neural Networks by Simon Haykin
-
 Following is the detail theory for input dim =3, hidden layer = 2 and output layer = 1
 #### Feed farward:
 
@@ -619,79 +616,6 @@ $ z_{1}^{3} = \left[ {\begin{array}{c}
 
 $ a^{3}_{1} = \sigma(z_{1}^{3})$
 
-
---------
-
-#### Back propagation:
-
-##### cost function: $J = \frac{1}{2} \sum_{i}^{N} (\hat{Y}_{i} -Y_i) $
-
-##### From Last Layer:
-
-|Weight: $W^{2}_{11}$| Weight: $W^{2}_{12}$|
-|---|---|
-|$\large{\frac{\partial J}{\partial W^{2}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{11}^{2}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{1}^{2}\\
- \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{11}$| $\large{\frac{\partial J}{\partial W^{2}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{12}^{2}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{2}^{2}\\
- \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{12} $|
- 
-
-##### Updates:
-
-$W^{2}_{11} \rightarrow W^{2}_{11} + \eta .\large{\frac{\partial J}{\partial W^{2}_{11}}}\\
-W^{2}_{12} \rightarrow W^{2}_{12} + \eta .\large{\frac{\partial J}{\partial W^{2}_{12}}} $
-
-
-
-
---------
-
-##### From Hidden Layer
-
-
-|Weight: $W^{1}_{11}$ | Weight: $W^{1}_{12}$|  Weight: $W^{1}_{11}$ |
-|---|---|
-|$\large{\frac{\partial J}{\partial W^{1}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{11}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{1}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{11}$| $\large{\frac{\partial J}{\partial W^{1}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{2}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{12}$|$\large{\frac{\partial J}{\partial W^{1}_{13}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{13}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{3}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{3}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{13}$|
-|Weight: $W^{1}_{21}$| Weight : $W^{1}_{22}$| Weight : $W^{1}_{23}$|
-|$\large{\frac{\partial J}{\partial W^{1}_{21}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{21}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{1}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{1}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{21}$| $\large{\frac{\partial J}{\partial W^{1}_{22}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{2}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{2}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{22}$|$\large{\frac{\partial J}{\partial W^{1}_{23}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
- \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{3}\\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{3}\\
- \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{23}$|
-
-
-##### Updates:
-
-$W^{1}_{11} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{11}}}\\
-W^{1}_{12} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{12}}} \\
-W^{1}_{13} \rightarrow W^{1}_{13} + \eta .\large{\frac{\partial J}{\partial W^{1}_{13}}}\\
-W^{1}_{21} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{21}}} \\
-W^{1}_{22} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{22}}}\\
-W^{1}_{23} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{23}}} $
-
-
-
-
-
-
-
-
----------
 
 
 ```python
@@ -827,7 +751,7 @@ plt.show()
 ```
 
 
-![png](output_33_0.png)
+![png](output_27_0.png)
 
 
 ## Check out your predictions
@@ -852,7 +776,7 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 ```
 
 
-![png](output_35_0.png)
+![png](output_29_0.png)
 
 
 ## Thinking about your results
@@ -948,4 +872,20 @@ unittest.TextTestRunner().run(suite)
 
 
 
-Thank You!
+----------
+
+###  Some Fun Resources:
+![a](pic1/perceptron.jpg)
+Image:Neural Networks by Simon  
+
+--------
+
+### Following is the detail of (input =3, hidden=2,output =1)
+
+![a](pic1/output.png)
+
+![a](pic1/hidden.png)
+
+![a](pic1/final.png)
+
+*** THANK YOU! ***

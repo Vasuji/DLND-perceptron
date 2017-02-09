@@ -13693,17 +13693,6 @@ height=377
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="perceptron.jpg" alt="a">
-Image source: Neural Networks by Simon Haykin</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <p>Following is the detail theory for input dim =3, hidden layer = 2 and output layer = 1</p>
 <h4 id="Feed-farward:">Feed farward:<a class="anchor-link" href="#Feed-farward:">&#182;</a></h4><h5 id="1.-Hidden-input-=-input_to_hidden_weights-*-input">1. Hidden input = input_to_hidden_weights * input<a class="anchor-link" href="#1.-Hidden-input-=-input_to_hidden_weights-*-input">&#182;</a></h5><p>$\left[ {\begin{array}{c}
    z_{1}^{2} \\
@@ -13734,111 +13723,6 @@ Image source: Neural Networks by Simon Haykin</p>
    a_{2}^{2} \\    
     \end{array} } \right] = [ W_{11}^{2}a_1^{2} +  W_{12}^{2}a_2^{2}] $</p>
 <h5 id="4.-Final-output-=-activation(final-input)">4. Final output = activation(final input)<a class="anchor-link" href="#4.-Final-output-=-activation(final-input)">&#182;</a></h5><p>$ a^{3}_{1} = \sigma(z_{1}^{3})$</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Back-propagation:">Back propagation:<a class="anchor-link" href="#Back-propagation:">&#182;</a></h4><h5 id="cost-function:-$J-=-\frac{1}{2}-\sum_{i}^{N}-(\hat{Y}_{i}--Y_i)-$">cost function: $J = \frac{1}{2} \sum_{i}^{N} (\hat{Y}_{i} -Y_i) $<a class="anchor-link" href="#cost-function:-$J-=-\frac{1}{2}-\sum_{i}^{N}-(\hat{Y}_{i}--Y_i)-$">&#182;</a></h5><h5 id="From-Last-Layer:">From Last Layer:<a class="anchor-link" href="#From-Last-Layer:">&#182;</a></h5><table>
-<thead><tr>
-<th>Weight: $W^{2}_{11}$</th>
-<th>Weight: $W^{2}_{12}$</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$\large{\frac{\partial J}{\partial W^{2}<em>{11}}} = (a^{3}</em>{1}-Y).\frac{\partial a^{3}<em>{1}}{\partial z</em>{1}^{3}}. \frac{\partial z^{3}<em>{1}}{\partial W</em>{11}^{2}}\</td>
-</tr>
-</tbody>
-</table>
-<p>\hspace{1.25 cm} = \underbrace{(a^{3}<em>{1}-Y) .\underbrace{\sigma^{'}(z^{3}</em>{1})}<em>{I}}</em>{\delta<em>{1}^{3}}. a</em>{1}^{2}\
- \hspace{1.25 cm} = {(a^{2})^{T}. \delta^{3}}<em>{11}$| $\large{\frac{\partial J}{\partial W^{2}</em>{12}}} = (a^{3}<em>{1}-Y).\frac{\partial a^{3}</em>{1}}{\partial z<em>{1}^{3}}. \frac{\partial z^{3}</em>{1}}{\partial W<em>{12}^{2}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}</em>{1}-Y) .\underbrace{\sigma^{'}(z^{3}<em>{1})}</em>{I}}<em>{\delta</em>{1}^{3}}. a<em>{2}^{2}\
- \hspace{1.25 cm} = {(a^{2})^{T}. \delta^{3}}</em>{12} $|</p>
-<h5 id="Updates:">Updates:<a class="anchor-link" href="#Updates:">&#182;</a></h5><p>$W^{2}_{11} \rightarrow W^{2}_{11} + \eta .\large{\frac{\partial J}{\partial W^{2}_{11}}}\\
-W^{2}_{12} \rightarrow W^{2}_{12} + \eta .\large{\frac{\partial J}{\partial W^{2}_{12}}} $</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h5 id="From-Hidden-Layer">From Hidden Layer<a class="anchor-link" href="#From-Hidden-Layer">&#182;</a></h5><table>
-<thead><tr>
-<th>Weight: $W^{1}_{11}$</th>
-<th>Weight: $W^{1}_{12}$</th>
-<th>Weight: $W^{1}_{11}$</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>$\large{\frac{\partial J}{\partial W^{1}<em>{11}}} = (a^{3}</em>{1}-Y).\frac{\partial a^{3}<em>{1}}{\partial z</em>{1}^{3}}. \frac{\partial z^{3}<em>{1}}{\partial a^{2}</em>{1}}.\frac{\partial a^{2}<em>{1}}{\partial z</em>{1}^{2}}.\frac{\partial z^{2}<em>{1}}{\partial W</em>{11}^{1}}\</td>
-</tr>
-</tbody>
-</table>
-<p>\hspace{1.25 cm} = \underbrace{(a^{3}<em>{1}-Y).\underbrace{\sigma^{'}(z^{3}</em>{1})}<em>{I}}</em>{\delta^{3}<em>{1}}.\sigma^{'}(z^{2}</em>{1}). W^{2}<em>{11}. x </em>{1}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}<em>{1}. W^{2}</em>{11}}<em>{{(W^{2})^{T}.\delta^{3}}</em>{1}}. \sigma^{'}(z^{2}<em>{1})}</em>{\delta^{2}<em>{1}}. x </em>{1}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}<em>{11}$| $\large{\frac{\partial J}{\partial W^{1}</em>{12}}} = (a^{3}<em>{1}-Y).\frac{\partial a^{3}</em>{1}}{\partial z<em>{1}^{3}}. \frac{\partial z^{3}</em>{1}}{\partial a^{2}<em>{1}}.\frac{\partial a^{2}</em>{1}}{\partial z<em>{1}^{2}}.\frac{\partial z^{2}</em>{1}}{\partial W<em>{12}^{1}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}</em>{1}-Y).\underbrace{\sigma^{'}(z^{3}<em>{1})}</em>{I}}<em>{\delta^{3}</em>{1}}.\sigma^{'}(z^{2}<em>{1}). W^{2}</em>{11}. x <em>{1}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}</em>{1}. W^{2}<em>{11}}</em>{{(W^{2})^{T}.\delta^{3}}<em>{1}}. \sigma^{'}(z^{2}</em>{1})}<em>{\delta^{2}</em>{1}}. x <em>{2}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}</em>{12}$|$\large{\frac{\partial J}{\partial W^{1}<em>{13}}} = (a^{3}</em>{1}-Y).\frac{\partial a^{3}<em>{1}}{\partial z</em>{1}^{3}}. \frac{\partial z^{3}<em>{1}}{\partial a^{2}</em>{1}}.\frac{\partial a^{2}<em>{1}}{\partial z</em>{1}^{2}}.\frac{\partial z^{2}<em>{1}}{\partial W</em>{13}^{1}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}<em>{1}-Y).\underbrace{\sigma^{'}(z^{3}</em>{1})}<em>{I}}</em>{\delta^{3}<em>{1}}.\sigma^{'}(z^{2}</em>{1}). W^{2}<em>{11}. x </em>{3}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}<em>{1}. W^{2}</em>{11}}<em>{{(W^{2})^{T}.\delta^{3}}</em>{1}}. \sigma^{'}(z^{2}<em>{1})}</em>{\delta^{2}<em>{1}}. x </em>{3}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}<em>{13}$|
-|Weight: $W^{1}</em>{21}$| Weight : $W^{1}<em>{22}$| Weight : $W^{1}</em>{23}$|
-|$\large{\frac{\partial J}{\partial W^{1}<em>{21}}} = (a^{3}</em>{1}-Y).\frac{\partial a^{3}<em>{1}}{\partial z</em>{1}^{3}}. \frac{\partial z^{3}<em>{1}}{\partial a^{2}</em>{1}}.\frac{\partial a^{2}<em>{1}}{\partial z</em>{1}^{2}}.\frac{\partial z^{2}<em>{1}}{\partial W</em>{21}^{1}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}<em>{1}-Y).\underbrace{\sigma^{'}(z^{3}</em>{1})}<em>{I}}</em>{\delta^{3}<em>{1}}.\sigma^{'}(z^{2}</em>{2}). W^{2}<em>{12}. x </em>{1}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}<em>{1}. W^{2}</em>{11}}<em>{{(W^{2})^{T}.\delta^{3}}</em>{2}}. \sigma^{'}(z^{2}<em>{2})}</em>{\delta^{2}<em>{2}}. x </em>{1}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}<em>{21}$| $\large{\frac{\partial J}{\partial W^{1}</em>{22}}} = (a^{3}<em>{1}-Y).\frac{\partial a^{3}</em>{1}}{\partial z<em>{1}^{3}}. \frac{\partial z^{3}</em>{1}}{\partial a^{2}<em>{1}}.\frac{\partial a^{2}</em>{1}}{\partial z<em>{1}^{2}}.\frac{\partial z^{2}</em>{1}}{\partial W<em>{12}^{1}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}</em>{1}-Y).\underbrace{\sigma^{'}(z^{3}<em>{1})}</em>{I}}<em>{\delta^{3}</em>{1}}.\sigma^{'}(z^{2}<em>{2}). W^{2}</em>{12}. x <em>{2}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}</em>{1}. W^{2}<em>{11}}</em>{{(W^{2})^{T}.\delta^{3}}<em>{2}}. \sigma^{'}(z^{2}</em>{2})}<em>{\delta^{2}</em>{2}}. x <em>{2}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}</em>{22}$|$\large{\frac{\partial J}{\partial W^{1}<em>{23}}} = (a^{3}</em>{1}-Y).\frac{\partial a^{3}<em>{1}}{\partial z</em>{1}^{3}}. \frac{\partial z^{3}<em>{1}}{\partial a^{2}</em>{1}}.\frac{\partial a^{2}<em>{1}}{\partial z</em>{1}^{2}}.\frac{\partial z^{2}<em>{1}}{\partial W</em>{12}^{1}}\
- \hspace{1.25 cm} = \underbrace{(a^{3}<em>{1}-Y).\underbrace{\sigma^{'}(z^{3}</em>{1})}<em>{I}}</em>{\delta^{3}<em>{1}}.\sigma^{'}(z^{2}</em>{2}). W^{2}<em>{12}. x </em>{3}\
- \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}<em>{1}. W^{2}</em>{11}}<em>{{(W^{2})^{T}.\delta^{3}}</em>{2}}. \sigma^{'}(z^{2}<em>{2})}</em>{\delta^{2}<em>{2}}. x </em>{3}\
- \hspace{1.25 cm} = {(x)^{T} . \delta^{2}}_{23}$|</p>
-<h5 id="Updates:">Updates:<a class="anchor-link" href="#Updates:">&#182;</a></h5><p>$W^{1}_{11} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{11}}}\\
-W^{1}_{12} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{12}}} \\
-W^{1}_{13} \rightarrow W^{1}_{13} + \eta .\large{\frac{\partial J}{\partial W^{1}_{13}}}\\
-W^{1}_{21} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{21}}} \\
-W^{1}_{22} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{22}}}\\
-W^{1}_{23} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{23}}} $</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr>
 
 </div>
 </div>
@@ -18621,7 +18505,77 @@ OK
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Thank You!</p>
+<hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Some-Fun-Resources:">Some Fun Resources:<a class="anchor-link" href="#Some-Fun-Resources:">&#182;</a></h3><p><img src="pic1/perceptron.jpg" alt="a">
+Image:Neural Networks by Simon</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Following-is-the-detail-of-(input-=3,-hidden=2,output-=1)">Following is the detail of (input =3, hidden=2,output =1)<a class="anchor-link" href="#Following-is-the-detail-of-(input-=3,-hidden=2,output-=1)">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="pic1/output.png" alt="a"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="pic1/hidden.png" alt="a"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="pic1/final.png" alt="a"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong><em> THANK YOU! </em></strong></p>
 
 </div>
 </div>
