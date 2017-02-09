@@ -570,54 +570,8 @@ class NeuralNetwork(object):
 ### My Network Checker
 
 Following is the detail theory for input dim =3, hidden layer = 2 and output layer = 1
-#### Feed farward:
 
-
-##### 1. Hidden input = input_to_hidden_weights * input
-
-
-$\left[ {\begin{array}{c}
-   z_{1}^{2} \\
-   z_{2}^{2} \\     
-   \end{array} } \right]  = \left[ {\begin{array}{cc}
-   W_{11}^{1} & W_{12}^{1} & W_{13}^{1} \\
-   W_{21}^{1} & W_{22}^{1} & W_{23}^{1}\\     
-   \end{array} } \right]\left[ {\begin{array}{c}
-   x_{1} \\
-   x_{2} \\ 
-   x_{3}\\
-   \end{array} } \right] = \left[ {\begin{array}{c}
-   W_{11}^{1}x_1 +  W_{12}^{1}x_2 +  W_{13}^{1}x_3 \\
-    W_{21}^{1}x_1 +  W_{22}^{1}x_2 +  W_{23}^{1}x_3 \\   
-   \end{array} } \right] $   
-   
-##### 2. Hidden Output  = activation(hidden input)
-   
-   $\left[ {\begin{array}{c}
-   a_{1}^{2} \\
-   a_{2}^{2} \\    
-    \end{array} } \right] = 
-  \left[ {\begin{array}{c}
-   \sigma(z^{2}_{1}) \\
-   \sigma(z^{2}_{2}) \\     
-   \end{array} } \right] $   
-   
-   
-##### 3. Final input   = hidden_to_output_weights* hidden output
-
-$ z_{1}^{3} = \left[ {\begin{array}{c}
-   W_{11}^{2} & W_{12}^{2} \\    
-    \end{array} } \right]\left[ {\begin{array}{c}
-   a_{1}^{2} \\
-   a_{2}^{2} \\    
-    \end{array} } \right] = [ W_{11}^{2}a_1^{2} +  W_{12}^{2}a_2^{2}] $
-
-
-##### 4. Final output = activation(final input)
-
-$ a^{3}_{1} = \sigma(z_{1}^{3})$
-
-
+![a](pic1/Math.png)
 
 ```python
 inputs = [0.5, -0.2, 0.1]
