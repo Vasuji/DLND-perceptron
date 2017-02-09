@@ -1,4 +1,4 @@
-# perceptron
+# Perceptron
 ----------------
 # Your first neural network
 
