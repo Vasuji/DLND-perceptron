@@ -185,8 +185,8 @@ rides[:24*10].plot(x='dteday', y='cnt')
 
 
 
-![png](https://github.com/Vasuji/perceptron/blob/master/pic1/output_6_1.png?raw=true =50x50)
 
+<img src="https://github.com/Vasuji/perceptron/blob/master/pic1/output_6_1.png" width="100" height="100" />
 
 ### Dummy variables
 Here we have some categorical variables like season, weather, month. To include these in our model, we'll need to make binary dummy variables. This is simple to do with Pandas thanks to `get_dummies()`.
