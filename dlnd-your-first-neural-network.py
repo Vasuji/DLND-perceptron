@@ -124,13 +124,13 @@ def sigmoid(x):
     return 1 / ( 1 + np.exp(-x))
 
 
-# In[67]:
+# In[10]:
 
 def MSE(y, Y):
     return np.mean((y-Y)**2)
 
 
-# In[68]:
+# In[11]:
 
 class NeuralNetwork(object):
     def __init__(self, input_nodes, hidden_nodes, output_nodes, learning_rate):
@@ -160,15 +160,7 @@ class NeuralNetwork(object):
     def sigmoid_derivative(self, z):
         return z*(1-z)
     
-    
-    def dJdW(self,errors,inputs,innodes,outnodes):
-        dw = np.array([[0.0 for j in range(innodes)] for i in range(outnodes)])
-        for i in range(outnodes):
-                for j in range(innodes):
-                    dw[i][j] = dw[i][j] + errors[i]*inputs[j]
-        return dw
-    
-    
+
     
     def train(self, inputs_list, targets_list, verbose):
         
@@ -216,7 +208,7 @@ class NeuralNetwork(object):
         # TODO: Backpropagated error
         # errors propagated to the hidden layer
         hidden_grad = self.sigmoid_derivative(hidden_outputs) # hidden layer gradients
-        hidden_errors = np.dot(self.weights_hidden_to_output.T,output_errors)*hidden_grad
+        hidden_errors = np.dot(self.weights_hidden_to_output.T,output_errors)
         
         
         if verbose:
@@ -228,15 +220,14 @@ class NeuralNetwork(object):
         
         # TODO: Update the weights
         # update hidden-to-output weights with gradient descent step
-        self.weights_hidden_to_output += self.lr*        self.dJdW(output_errors,hidden_outputs,self.hidden_nodes,self.output_nodes)
-       
-             
-          
+        
+        self.weights_hidden_to_output += self.lr*            np.dot(output_errors,hidden_outputs.T)
+         
             
         # update input-to-hidden weights with gradient descent step
-        self.weights_input_to_hidden += self.lr*        self.dJdW(hidden_errors,inputs,self.input_nodes,self.hidden_nodes)
-       
-           
+        
+        self.weights_input_to_hidden += self.lr*             np.dot(hidden_errors*hidden_grad,inputs.T)
+              
         
         if verbose:
             results["weights_hidden_to_output"] = self.weights_hidden_to_output
@@ -250,7 +241,6 @@ class NeuralNetwork(object):
         # Run a forward pass through the network
         inputs = np.array(inputs_list, ndmin=2).T
         
-        #print(self.weights_input_to_hidden)
         
         
         #### Implement the forward pass here ####
@@ -272,9 +262,134 @@ class NeuralNetwork(object):
 
 # ----------
 
-# ### Network checker
+# ### My Network Checker
 
-# In[13]:
+# ![a](perceptron.jpg)
+# Image source: Neural Networks by Simon Haykin
+
+# Following is the detail theory for input dim =3, hidden layer = 2 and output layer = 1
+# #### Feed farward:
+# 
+# 
+# ##### 1. Hidden input = input_to_hidden_weights * input
+# 
+# 
+# $\left[ {\begin{array}{c}
+#    z_{1}^{2} \\
+#    z_{2}^{2} \\     
+#    \end{array} } \right]  = \left[ {\begin{array}{cc}
+#    W_{11}^{1} & W_{12}^{1} & W_{13}^{1} \\
+#    W_{21}^{1} & W_{22}^{1} & W_{23}^{1}\\     
+#    \end{array} } \right]\left[ {\begin{array}{c}
+#    x_{1} \\
+#    x_{2} \\ 
+#    x_{3}\\
+#    \end{array} } \right] = \left[ {\begin{array}{c}
+#    W_{11}^{1}x_1 +  W_{12}^{1}x_2 +  W_{13}^{1}x_3 \\
+#     W_{21}^{1}x_1 +  W_{22}^{1}x_2 +  W_{23}^{1}x_3 \\   
+#    \end{array} } \right] $   
+#    
+# ##### 2. Hidden Output  = activation(hidden input)
+#    
+#    $\left[ {\begin{array}{c}
+#    a_{1}^{2} \\
+#    a_{2}^{2} \\    
+#     \end{array} } \right] = 
+#   \left[ {\begin{array}{c}
+#    \sigma(z^{2}_{1}) \\
+#    \sigma(z^{2}_{2}) \\     
+#    \end{array} } \right] $   
+#    
+#    
+# ##### 3. Final input   = hidden_to_output_weights* hidden output
+# 
+# $ z_{1}^{3} = \left[ {\begin{array}{c}
+#    W_{11}^{2} & W_{12}^{2} \\    
+#     \end{array} } \right]\left[ {\begin{array}{c}
+#    a_{1}^{2} \\
+#    a_{2}^{2} \\    
+#     \end{array} } \right] = [ W_{11}^{2}a_1^{2} +  W_{12}^{2}a_2^{2}] $
+# 
+# 
+# ##### 4. Final output = activation(final input)
+# 
+# $ a^{3}_{1} = \sigma(z_{1}^{3})$
+# 
+
+# --------
+
+# #### Back propagation:
+# 
+# ##### cost function: $J = \frac{1}{2} \sum_{i}^{N} (\hat{Y}_{i} -Y_i) $
+# 
+# ##### From Last Layer:
+# 
+# |Weight: $W^{2}_{11}$| Weight: $W^{2}_{12}$|
+# |---|---|
+# |$\large{\frac{\partial J}{\partial W^{2}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{11}^{2}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{1}^{2}\\
+#  \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{11}$| $\large{\frac{\partial J}{\partial W^{2}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{12}^{2}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{2}^{2}\\
+#  \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{12} $|
+#  
+# 
+# ##### Updates:
+# 
+# $W^{2}_{11} \rightarrow W^{2}_{11} + \eta .\large{\frac{\partial J}{\partial W^{2}_{11}}}\\
+# W^{2}_{12} \rightarrow W^{2}_{12} + \eta .\large{\frac{\partial J}{\partial W^{2}_{12}}} $
+# 
+# 
+# 
+
+# --------
+
+# ##### From Hidden Layer
+# 
+# 
+# |Weight: $W^{1}_{11}$ | Weight: $W^{1}_{12}$|  Weight: $W^{1}_{11}$ |
+# |---|---|
+# |$\large{\frac{\partial J}{\partial W^{1}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{11}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{1}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{11}$| $\large{\frac{\partial J}{\partial W^{1}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{2}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{12}$|$\large{\frac{\partial J}{\partial W^{1}_{13}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{13}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{3}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{3}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{13}$|
+# |Weight: $W^{1}_{21}$| Weight : $W^{1}_{22}$| Weight : $W^{1}_{23}$|
+# |$\large{\frac{\partial J}{\partial W^{1}_{21}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{21}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{1}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{1}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{21}$| $\large{\frac{\partial J}{\partial W^{1}_{22}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{2}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{2}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{22}$|$\large{\frac{\partial J}{\partial W^{1}_{23}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+#  \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{3}\\
+#  \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{3}\\
+#  \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{23}$|
+# 
+# 
+# ##### Updates:
+# 
+# $W^{1}_{11} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{11}}}\\
+# W^{1}_{12} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{12}}} \\
+# W^{1}_{13} \rightarrow W^{1}_{13} + \eta .\large{\frac{\partial J}{\partial W^{1}_{13}}}\\
+# W^{1}_{21} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{21}}} \\
+# W^{1}_{22} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{22}}}\\
+# W^{1}_{23} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{23}}} $
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+
+# ---------
+
+# In[12]:
 
 inputs = [0.5, -0.2, 0.1]
 targets = [0.4]
@@ -308,19 +423,19 @@ NN.train(inputs, targets, verbose = True)
 # ### Choose the number of hidden nodes
 # The more hidden nodes you have, the more accurate predictions the model will make. Try a few different numbers and see how it affects the performance. You can look at the losses dictionary for a metric of the network performance. If the number of hidden units is too low, then the model won't have enough space to learn and if it is too high there are too many options for the direction that the learning can take. The trick here is to find the right balance in number of hidden units you choose.
 
-# In[23]:
+# In[13]:
 
 train_features.shape
 
 
-# In[62]:
+# In[14]:
 
 import sys
 
 ### Set the hyperparameters here ###
-epochs = 100
+epochs = 1000
 learning_rate = 0.1
-hidden_nodes = 50
+hidden_nodes = 28
 output_nodes = 1
 
 N_i = train_features.shape[1]
@@ -359,7 +474,7 @@ for e in range(epochs):
     
 
 
-# In[64]:
+# In[15]:
 
 plt.plot(losses['train'], label='Training loss')
 plt.plot(losses['validation'], label='Validation loss')
@@ -372,7 +487,7 @@ plt.show()
 # 
 # Here, use the test data to view how well your network is modeling the data. If something is completely wrong here, make sure each step in your network is implemented correctly.
 
-# In[65]:
+# In[16]:
 
 fig, ax = plt.subplots(figsize=(8,4))
 
@@ -401,7 +516,7 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 # 
 # Run these unit tests to check the correctness of your network implementation. These tests must all be successful to pass the project.
 
-# In[66]:
+# In[17]:
 
 import unittest
 
@@ -468,7 +583,4 @@ suite = unittest.TestLoader().loadTestsFromModule(TestMethods())
 unittest.TextTestRunner().run(suite)
 
 
-# In[ ]:
-
-
-
+# Thank You!

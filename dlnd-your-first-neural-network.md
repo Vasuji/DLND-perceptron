@@ -179,7 +179,7 @@ rides[:24*10].plot(x='dteday', y='cnt')
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x10d80b898>
+    <matplotlib.axes._subplots.AxesSubplot at 0x10cfe1dd8>
 
 
 
@@ -462,15 +462,7 @@ class NeuralNetwork(object):
     def sigmoid_derivative(self, z):
         return z*(1-z)
     
-    
-    def dJdW(self,errors,inputs,innodes,outnodes):
-        dw = np.array([[0.0 for j in range(innodes)] for i in range(outnodes)])
-        for i in range(outnodes):
-                for j in range(innodes):
-                    dw[i][j] = dw[i][j] + errors[i]*inputs[j]
-        return dw
-    
-    
+
     
     def train(self, inputs_list, targets_list, verbose):
         
@@ -518,7 +510,7 @@ class NeuralNetwork(object):
         # TODO: Backpropagated error
         # errors propagated to the hidden layer
         hidden_grad = self.sigmoid_derivative(hidden_outputs) # hidden layer gradients
-        hidden_errors = np.dot(self.weights_hidden_to_output.T,output_errors)*hidden_grad
+        hidden_errors = np.dot(self.weights_hidden_to_output.T,output_errors)
         
         
         if verbose:
@@ -530,17 +522,16 @@ class NeuralNetwork(object):
         
         # TODO: Update the weights
         # update hidden-to-output weights with gradient descent step
+        
         self.weights_hidden_to_output += self.lr*\
-        self.dJdW(output_errors,hidden_outputs,self.hidden_nodes,self.output_nodes)
-       
-             
-          
+            np.dot(output_errors,hidden_outputs.T)
+         
             
         # update input-to-hidden weights with gradient descent step
+        
         self.weights_input_to_hidden += self.lr*\
-        self.dJdW(hidden_errors,inputs,self.input_nodes,self.hidden_nodes)
-       
-           
+             np.dot(hidden_errors*hidden_grad,inputs.T)
+              
         
         if verbose:
             results["weights_hidden_to_output"] = self.weights_hidden_to_output
@@ -554,7 +545,6 @@ class NeuralNetwork(object):
         # Run a forward pass through the network
         inputs = np.array(inputs_list, ndmin=2).T
         
-        #print(self.weights_input_to_hidden)
         
         
         #### Implement the forward pass here ####
@@ -576,7 +566,132 @@ class NeuralNetwork(object):
 
 ----------
 
-### Network checker
+### My Network Checker
+
+![a](perceptron.jpg)
+Image source: Neural Networks by Simon Haykin
+
+Following is the detail theory for input dim =3, hidden layer = 2 and output layer = 1
+#### Feed farward:
+
+
+##### 1. Hidden input = input_to_hidden_weights * input
+
+
+$\left[ {\begin{array}{c}
+   z_{1}^{2} \\
+   z_{2}^{2} \\     
+   \end{array} } \right]  = \left[ {\begin{array}{cc}
+   W_{11}^{1} & W_{12}^{1} & W_{13}^{1} \\
+   W_{21}^{1} & W_{22}^{1} & W_{23}^{1}\\     
+   \end{array} } \right]\left[ {\begin{array}{c}
+   x_{1} \\
+   x_{2} \\ 
+   x_{3}\\
+   \end{array} } \right] = \left[ {\begin{array}{c}
+   W_{11}^{1}x_1 +  W_{12}^{1}x_2 +  W_{13}^{1}x_3 \\
+    W_{21}^{1}x_1 +  W_{22}^{1}x_2 +  W_{23}^{1}x_3 \\   
+   \end{array} } \right] $   
+   
+##### 2. Hidden Output  = activation(hidden input)
+   
+   $\left[ {\begin{array}{c}
+   a_{1}^{2} \\
+   a_{2}^{2} \\    
+    \end{array} } \right] = 
+  \left[ {\begin{array}{c}
+   \sigma(z^{2}_{1}) \\
+   \sigma(z^{2}_{2}) \\     
+   \end{array} } \right] $   
+   
+   
+##### 3. Final input   = hidden_to_output_weights* hidden output
+
+$ z_{1}^{3} = \left[ {\begin{array}{c}
+   W_{11}^{2} & W_{12}^{2} \\    
+    \end{array} } \right]\left[ {\begin{array}{c}
+   a_{1}^{2} \\
+   a_{2}^{2} \\    
+    \end{array} } \right] = [ W_{11}^{2}a_1^{2} +  W_{12}^{2}a_2^{2}] $
+
+
+##### 4. Final output = activation(final input)
+
+$ a^{3}_{1} = \sigma(z_{1}^{3})$
+
+
+--------
+
+#### Back propagation:
+
+##### cost function: $J = \frac{1}{2} \sum_{i}^{N} (\hat{Y}_{i} -Y_i) $
+
+##### From Last Layer:
+
+|Weight: $W^{2}_{11}$| Weight: $W^{2}_{12}$|
+|---|---|
+|$\large{\frac{\partial J}{\partial W^{2}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{11}^{2}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{1}^{2}\\
+ \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{11}$| $\large{\frac{\partial J}{\partial W^{2}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial W_{12}^{2}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y) .\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta_{1}^{3}}. a_{2}^{2}\\
+ \hspace{1.25 cm} = \{(a^{2})^{T}. \delta^{3}\}_{12} $|
+ 
+
+##### Updates:
+
+$W^{2}_{11} \rightarrow W^{2}_{11} + \eta .\large{\frac{\partial J}{\partial W^{2}_{11}}}\\
+W^{2}_{12} \rightarrow W^{2}_{12} + \eta .\large{\frac{\partial J}{\partial W^{2}_{12}}} $
+
+
+
+
+--------
+
+##### From Hidden Layer
+
+
+|Weight: $W^{1}_{11}$ | Weight: $W^{1}_{12}$|  Weight: $W^{1}_{11}$ |
+|---|---|
+|$\large{\frac{\partial J}{\partial W^{1}_{11}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{11}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{1}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{11}$| $\large{\frac{\partial J}{\partial W^{1}_{12}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{1}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{2}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{12}$|$\large{\frac{\partial J}{\partial W^{1}_{13}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{13}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{1}). W^{2}_{11}. x _{3}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{1}}. \sigma^{'}(z^{2}_{1})}_{\delta^{2}_{1}}. x _{3}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{13}$|
+|Weight: $W^{1}_{21}$| Weight : $W^{1}_{22}$| Weight : $W^{1}_{23}$|
+|$\large{\frac{\partial J}{\partial W^{1}_{21}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{21}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{1}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{1}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{21}$| $\large{\frac{\partial J}{\partial W^{1}_{22}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{2}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{2}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{22}$|$\large{\frac{\partial J}{\partial W^{1}_{23}}} = (a^{3}_{1}-Y).\frac{\partial a^{3}_{1}}{\partial z_{1}^{3}}. \frac{\partial z^{3}_{1}}{\partial a^{2}_{1}}.\frac{\partial a^{2}_{1}}{\partial z_{1}^{2}}.\frac{\partial z^{2}_{1}}{\partial W_{12}^{1}}\\
+ \hspace{1.25 cm} = \underbrace{(a^{3}_{1}-Y).\underbrace{\sigma^{'}(z^{3}_{1})}_{I}}_{\delta^{3}_{1}}.\sigma^{'}(z^{2}_{2}). W^{2}_{12}. x _{3}\\
+ \hspace{1.25 cm} = \underbrace{\underbrace{\delta^{3}_{1}. W^{2}_{11}}_{\{(W^{2})^{T}.\delta^{3}\}_{2}}. \sigma^{'}(z^{2}_{2})}_{\delta^{2}_{2}}. x _{3}\\
+ \hspace{1.25 cm} = \{(x)^{T} . \delta^{2}\}_{23}$|
+
+
+##### Updates:
+
+$W^{1}_{11} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{11}}}\\
+W^{1}_{12} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{12}}} \\
+W^{1}_{13} \rightarrow W^{1}_{13} + \eta .\large{\frac{\partial J}{\partial W^{1}_{13}}}\\
+W^{1}_{21} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{21}}} \\
+W^{1}_{22} \rightarrow W^{1}_{11} + \eta .\large{\frac{\partial J}{\partial W^{1}_{22}}}\\
+W^{1}_{23} \rightarrow W^{1}_{12} + \eta .\large{\frac{\partial J}{\partial W^{1}_{23}}} $
+
+
+
+
+
+
+
+
+---------
 
 
 ```python
@@ -601,8 +716,8 @@ NN.train(inputs, targets, verbose = True)
     {'Error': 0.090006456864883497,
      'final_inputs': array([[ 0.09998924]]),
      'final_outputs': array([[ 0.09998924]]),
-     'hidden_errors': array([[ 0.02248057],
-            [-0.00743984]]),
+     'hidden_errors': array([[ 0.09000323],
+            [-0.03000108]]),
      'hidden_grad': array([[ 0.24977513],
             [ 0.24798589]]),
      'hidden_inputs': array([[-0.06],
@@ -657,9 +772,9 @@ train_features.shape
 import sys
 
 ### Set the hyperparameters here ###
-epochs = 100
+epochs = 1000
 learning_rate = 0.1
-hidden_nodes = 50
+hidden_nodes = 28
 output_nodes = 1
 
 N_i = train_features.shape[1]
@@ -700,7 +815,7 @@ for e in range(epochs):
     
 ```
 
-    Progress: 99.0% ... Training loss: 0.187 ... Validation loss: 0.364
+    Progress: 99.9% ... Training loss: 0.058 ... Validation loss: 0.147
 
 
 ```python
@@ -712,7 +827,7 @@ plt.show()
 ```
 
 
-![png](output_26_0.png)
+![png](output_33_0.png)
 
 
 ## Check out your predictions
@@ -737,7 +852,7 @@ _ = ax.set_xticklabels(dates[12::24], rotation=45)
 ```
 
 
-![png](output_28_0.png)
+![png](output_35_0.png)
 
 
 ## Thinking about your results
@@ -821,7 +936,7 @@ unittest.TextTestRunner().run(suite)
 
     .....
     ----------------------------------------------------------------------
-    Ran 5 tests in 0.008s
+    Ran 5 tests in 0.006s
     
     OK
 
@@ -833,7 +948,4 @@ unittest.TextTestRunner().run(suite)
 
 
 
-
-```python
-
-```
+Thank You!

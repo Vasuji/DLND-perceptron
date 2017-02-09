@@ -1,7 +1,0 @@
-# Perceptron
-
-
-Multi-Layer Perceptron
-
-
-
